@@ -1,54 +1,25 @@
-import requests
-from bs4 import BeautifulSoup
+import os
 import smtplib
 from email.mime.text import MIMEText
 
-KEYWORDS = [
-    "Data QA Engineer",
-    "ETL Testing",
-    "Data Warehouse Testing",
-    "Azure Databricks",
-    "Big Data Testing"
-]
+EMAIL_ID = os.environ["EMAIL_ID"]
+EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
 
-PROFILE = {
-    "experience": "10+ years",
-    "visa_sponsorship": True,
-    "language": "English",
-    "relocation": "Germany"
-}
+msg = MIMEText("""
+Congratulations Gajendran!
 
-def search_jobs():
-    print("Integrate LinkedIn, StepStone, Indeed APIs or Playwright scraping here.")
-    return []
+Your Germany AI Job Agent is working successfully.
 
-def score_job(job):
-    score = 0
-    skills = ["SQL", "Databricks", "ETL", "PySpark"]
-    for skill in skills:
-        if skill.lower() in job.get("description", "").lower():
-            score += 25
-    return score
+The next step is to connect it with LinkedIn, Indeed and StepStone to fetch real jobs.
+""")
 
-def send_email(jobs):
-    body = "\n".join(
-        f"{j['title']} | {j['company']} | Score: {j['score']}"
-        for j in jobs
-    )
+msg["Subject"] = "Germany AI Job Agent - Test Email"
+msg["From"] = EMAIL_ID
+msg["To"] = EMAIL_ID
 
-    msg = MIMEText(body)
-    msg["Subject"] = "Germany Data QA Job Digest"
-    msg["From"] = "YOUR_EMAIL"
-    msg["To"] = "YOUR_EMAIL"
+with smtplib.SMTP("smtp.gmail.com", 587) as server:
+    server.starttls()
+    server.login(EMAIL_ID, EMAIL_PASSWORD)
+    server.send_message(msg)
 
-    print("Configure SMTP settings before enabling email.")
-
-if __name__ == "__main__":
-    jobs = search_jobs()
-    ranked = []
-    for job in jobs:
-        job["score"] = score_job(job)
-        ranked.append(job)
-
-    ranked = sorted(ranked, key=lambda x: x["score"], reverse=True)
-    send_email(ranked[:20])
+print("Test email sent successfully!")
