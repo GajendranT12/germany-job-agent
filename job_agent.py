@@ -44,7 +44,9 @@ def search_indeed():
         }
 
         response = requests.get(url, headers=headers)
-
+        print(f"Searching for keyword: {keyword}")
+        print(f"URL: {url}")
+        print(f"Status Code: {response.status_code}")
         if response.status_code != 200:
             continue
 
@@ -118,6 +120,8 @@ def send_email(jobs):
 
 
 jobs = search_indeed()
+
+print(f"Total jobs found: {len(jobs)}")
 
 for job in jobs:
     job["score"] = score_job(job)
